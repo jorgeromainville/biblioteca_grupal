@@ -23,8 +23,9 @@ export class CategoriaService {
 
   findAll() {
     return this.prisma.categoria.findMany({
-      orderBy: { nombre: 'asc' }
-      include: { _count: { select: { libros: true } } },
+      orderBy: { nombre: 'asc' },
+      include: { _count: 
+        { select: { libros: true } } },
     });
   }
 
