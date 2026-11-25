@@ -29,6 +29,22 @@ prisma\schema.prisma
 - linea 12 error de escritura "Strng"
 - linea 62 error de escritura "ID" debia estar en miniscula
 
+## errores que encontre (Esdras)
+
+src\socio\dto\create-socio.dto.ts
+
+- linea 2 "IsEmail" estaba mal su importacion
+- linea 3 "IsString" se duplico su importacion
+
+src\socio\socio.controller.ts
+
+- linea 27 Faltaba cerrar el parentesis de la funcion
+
+src\socio\socio.module.ts
+
+- linea 5 Faltaba la extension .js en el import de SocioService
+
+## errores que encontre (Jorge)
 src/categoria/categoria.service.ts
 
 - una coma que faltaba en la linea 26
@@ -45,3 +61,4 @@ en la linea 24 era "GET" no "GETT"
 
 categoria/dto/create-autor.dto.ts
 solo era un palabara mal escrita en la linea "IsOptional" 11
+
