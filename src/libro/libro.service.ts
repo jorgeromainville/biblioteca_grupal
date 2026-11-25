@@ -1,3 +1,4 @@
+
 import {
   ConflictException,
   Injectable,
@@ -18,23 +19,34 @@ export class LibroService {
     if (!autor) {
       throw new NotFoundException(`El autor ${data.autorId} no existe`);
     }
+
+    // FIX LIB-01:
+    // Antes se utilizaba data.autorId para buscar la categoría.
+    // Se corrige a data.categoriaId para validar la categoría
+    // que realmente fue enviada en la solicitud.
     const categoria = await this.prisma.categoria.findUnique({
-      where: { id: data.autorId },
+      where: { id: data.categoriaId },
     });
     if (!categoria) {
       throw new NotFoundException(`La categoría ${data.categoriaId} no existe`);
     }
+
     const repetido = await this.prisma.libro.findUnique({
       where: { isbn: data.isbn },
     });
     if (repetido) {
       throw new ConflictException(`Ya existe un libro con ISBN ${data.isbn}`);
     }
+
     return this.prisma.libro.create({ data });
   }
 
   findAll(categoriaId?: number) {
-    return this.prisma.libros.findMany({
+    // FIX LIB-02:
+    // Antes se utilizaba prisma.libros, que no corresponde
+    // al delegate generado por Prisma para el modelo Libro.
+    // Se corrige a prisma.libro.
+    return this.prisma.libro.findMany({
       where: { categoriaId },
       orderBy: { titulo: 'asc' },
       include: { autor: true, categoria: true },
