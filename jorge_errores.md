@@ -14,10 +14,16 @@ src/categoria/categoria.module.ts
 - faltaba importar CategoriaService en Providers
 
 prisma/prisma.service.ts
-un "t" que faltaba en la linea en la linea 6 "PrismaClient"
+
+- un "t" que faltaba en la linea en la linea 6 "PrismaClient"
 
 src/autor.controller.ts
-en la linea 24 era "GET" no "GETT"
+
+- en la linea 24 era "GET" no "GETT"
 
 categoria/dto/create-autor.dto.ts
-solo era un palabara mal escrita en la linea "IsOptional" 11
+
+- solo era un palabara mal escrita en la linea "IsOptional" 11
+
+src/main
+faltaba un parentisis y una coma que se metio extra
