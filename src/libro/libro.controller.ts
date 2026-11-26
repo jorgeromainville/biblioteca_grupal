@@ -26,7 +26,9 @@ export class LibroController {
   @Get()
   @ApiQuery({ name: 'categoriaId', required: false, type: Number })
   findAll(@Query('categoriaId') categoriaId?: string) {
-    return this.libroService.findAll(Number(categoriaId));
+    return this.libroService.findAll(
+      categoriaId ? Number(categoriaId) : undefined,
+    );
   }
 
   @Get(':id')

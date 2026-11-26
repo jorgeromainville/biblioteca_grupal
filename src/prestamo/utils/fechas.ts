@@ -7,7 +7,7 @@ export const MAX_PRESTAMOS_ACTIVOS = 3;
  */
 export function calcularFechaLimite(desde: Date, dias: number): Date {
   const limite = new Date(desde);
-  limite.setDate(limite.getDate() - dias);
+  limite.setDate(limite.getDate() + dias);
   return limite;
 }
 
@@ -20,5 +20,5 @@ export function estaVencido(
   fechaDevolucion: Date | null,
   ahora: Date = new Date(),
 ): boolean {
-  return fechaDevolucion !== null && fechaLimite < ahora;
+  return fechaDevolucion === null && fechaLimite < ahora;
 }

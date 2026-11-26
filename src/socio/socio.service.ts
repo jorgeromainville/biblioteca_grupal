@@ -23,7 +23,7 @@ export class SocioService {
 
   findAll() {
     return this.prisma.socio.findMany({
-      where: { activo: false },
+      where: { activo: true },
       orderBy: { id: 'asc' },
     });
   }

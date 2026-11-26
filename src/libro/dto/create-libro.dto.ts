@@ -20,6 +20,9 @@ export class CreateLibroDto {
   isbn!: string;
 
   @ApiProperty({ example: 1967 })
+  @IsInt()
+  @Min(1450)
+  @Max(2100)
   anioPublicacion!: number;
 
   @ApiProperty({ example: 3, description: 'Ejemplares disponibles' })

@@ -1,4 +1,3 @@
-
 import {
   BadRequestException,
   Injectable,
@@ -21,7 +20,6 @@ export class PrestamoService {
     const socio = await this.prisma.socio.findUnique({
       where: { id: data.socioId },
     });
-
     if (!socio || !socio.activo) {
       throw new NotFoundException(`El socio ${data.socioId} no existe`);
     }
@@ -29,17 +27,14 @@ export class PrestamoService {
     const libro = await this.prisma.libro.findUnique({
       where: { id: data.libroId },
     });
-
     if (!libro) {
       throw new NotFoundException(`El libro ${data.libroId} no existe`);
     }
-
-    if (libro.stock <= 0) {
+    if (libro.stock < 1) {
       throw new BadRequestException('No hay ejemplares disponibles');
     }
 
     const activos = await this.contarActivos(data.socioId);
-
     if (activos >= MAX_PRESTAMOS_ACTIVOS) {
       throw new BadRequestException(
         `El socio ya tiene ${MAX_PRESTAMOS_ACTIVOS} préstamos activos`,
@@ -56,7 +51,6 @@ export class PrestamoService {
         where: { id: data.libroId },
         data: { stock: { decrement: 1 } },
       });
-
       return tx.prestamo.create({
         data: {
           libroId: data.libroId,
@@ -69,7 +63,7 @@ export class PrestamoService {
 
   contarActivos(socioId: number) {
     return this.prisma.prestamo.count({
-      where: { socioId, fechaDevolucion: { not: null } },
+      where: { socioId, fechaDevolucion: null },
     });
   }
 
@@ -84,7 +78,7 @@ export class PrestamoService {
     return this.prisma.prestamo.findMany({
       where: {
         fechaDevolucion: null,
-        fechaLimite: { gt: new Date() },
+        fechaLimite: { lt: new Date() },
       },
       orderBy: { fechaLimite: 'asc' },
       include: { libro: true, socio: true },
@@ -96,11 +90,9 @@ export class PrestamoService {
       where: { id },
       include: { libro: true, socio: true },
     });
-
     if (!prestamo) {
       throw new NotFoundException(`El préstamo ${id} no existe`);
     }
-
     return {
       ...prestamo,
       vencido: estaVencido(prestamo.fechaLimite, prestamo.fechaDevolucion),
@@ -109,17 +101,14 @@ export class PrestamoService {
 
   async devolver(id: number) {
     const prestamo = await this.findOne(id);
-
     if (prestamo.fechaDevolucion) {
       throw new BadRequestException('Este préstamo ya fue devuelto');
     }
-
     return this.prisma.$transaction(async (tx) => {
       await tx.libro.update({
         where: { id: prestamo.libroId },
         data: { stock: { increment: 1 } },
       });
-
       return tx.prestamo.update({
         where: { id },
         data: { fechaDevolucion: new Date() },
